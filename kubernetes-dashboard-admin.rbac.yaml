@@ -17,3 +17,6 @@ subjects:
 - kind: ServiceAccount
   name: admin-user
   namespace: kube-system
+- kind: ServiceAccount
+  name: service-controller
+  namespace: kube-system
