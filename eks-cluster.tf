@@ -1,7 +1,7 @@
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = local.cluster_name
-  cluster_version = "1.21"
+  cluster_version = var.cluster_version
   subnets         = module.vpc.private_subnets
 
   tags = {
@@ -13,23 +13,35 @@ module "eks" {
   vpc_id = module.vpc.vpc_id
 
   workers_group_defaults = {
-    root_volume_type = "gp2"
+    root_volume_type = var.root_volume_type
   }
 
   worker_groups = [
+    # {
+    #   name                          = "worker-group-1"
+    #   instance_type                 = "t2.small"
+    #   asg_desired_capacity          = 1
+    #   # additional_userdata           = "echo foo bar"
+    #   # additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
+    # },
+    # {
+    #   name                          = "worker-group-2"
+    #   instance_type                 = "t2.small"
+    #   asg_desired_capacity          = 1
+    #   # additional_userdata           = "echo foo bar"
+    #   # additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
+    # },
+    # {
+    #   name                          = "worker-group-3"
+    #   instance_type                 = "t2.small"
+    #   asg_desired_capacity          = 1
+    #   # additional_userdata           = "echo foo bar"
+    #   # additional_security_group_ids = [aws_security_group.worker_group_mgmt_three.id]
+    # },
     {
-      name                          = "worker-group-1"
-      instance_type                 = "t2.small"
-      # additional_userdata           = "echo foo bar"
-      additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
-      asg_desired_capacity          = 1
-    },
-    {
-      name                          = "worker-group-2"
-      instance_type                 = "t2.small"
-      # additional_userdata           = "echo foo bar"
-      additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
-      asg_desired_capacity          = 1
+      name                 = "worker-group"
+      instance_type        = "t2.small"
+      asg_desired_capacity = var.asg_desired_capacity
     },
   ]
 }

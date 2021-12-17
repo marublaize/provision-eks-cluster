@@ -55,7 +55,7 @@ kubectl get deployment metrics-server -n kube-system
 2. Create a **ClusterRoleBinding** and provide an authorization token. This gives the **cluster-admin** permission to access the kubernetes-dashboard:
 
     ```bash
-    kubectl apply -f dashboard-adminuser.yaml
+    kubectl apply -f dashboard-admin-user.yaml
     ```
 
 3. Generate the authorization token:
@@ -71,3 +71,36 @@ kubectl get deployment metrics-server -n kube-system
     ```
 
 5. You should be able to access and login to the [Kubernetes Dashboard](http://127.0.0.1:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/).
+
+## Control plane metrics with Prometheus
+
+### Viewing the raw metrics
+
+To view the raw metrics output, use ```kubectl get --raw /metrics```. This command allows you to pass any HTTP path and returns the raw response.
+
+ThE raw output returns verbatim what the API server exposes. These metrics are represented in a Prometheus format.
+
+### Deploying Prometheus with Helm V3
+
+1. Create a Prometheus namespace:
+
+    ```kubectl create namespace prometheus```
+
+2. Add the prometheus-community chart repository:
+
+    ```bash
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo update
+    ```
+
+3. Deploy Prometheus:
+
+    ```bash
+    helm upgrade -i prometheus prometheus-community/prometheus \
+        --namespace prometheus \
+        --set alertmanager.persistentVolume.storageClass="gp2",server.persistentVolume.storageClass="gp2"
+    ```
+
+4. Use ```kubectl get pods -n prometheus``` to verify that all of the pods in the prometheus namespace are in the READY state.
+
+5. Use ```kubectl --namespace=prometheus port-forward deploy/prometheus-server 9090``` to port forward the Prometheus console to your [local machine](localhost:9090). All of the Kubernetes endpoints that are connected to Prometheus using service discovery are displayed.

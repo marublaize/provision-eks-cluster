@@ -1,8 +1,3 @@
-variable "region" {
-  default     = "us-east-1"
-  description = "AWS region"
-}
-
 provider "aws" {
   region = var.region
 }
@@ -10,8 +5,7 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  # cluster_name = "jenkins-eks-${random_string.suffix.result}"
-  cluster_name = "kube-cluster"
+  cluster_name = "${var.cluster_name}-${random_string.suffix.result}"
 }
 
 resource "random_string" "suffix" {
