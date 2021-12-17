@@ -37,35 +37,37 @@ aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terr
 
 ## Configure cluster monitoring
 
-### Deploy Kubernetes Metric Server
+### Deploy Kubernetes Metrics Server
 
 ```bash
-kubectl apply -f metrics-server-0.3.6/deploy/1.8+/
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 kubectl get deployment metrics-server -n kube-system
 ```
 
-### Deploy and authenticate to the Kubernetes Dashboard
+### Kubernetes Dashboard
 
-```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
-```
+1. Deploy the Kubernetes Dashboard:
 
-To use the Kubernetes dashboard, you need to create a **ClusterRoleBinding** and provide an authorization token. This gives the **cluster-admin** permission to access the kubernetes-dashboard:
+    ```bash
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.4.0/aio/deploy/recommended.yaml
+    ```
 
-```bash
-kubectl apply -f kubernetes-dashboard-admin.rbac.yaml
-```
+2. Create a **ClusterRoleBinding** and provide an authorization token. This gives the **cluster-admin** permission to access the kubernetes-dashboard:
 
-Then, generate the authorization token:
+    ```bash
+    kubectl apply -f dashboard-adminuser.yaml
+    ```
 
-```bash
-kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep service-controller-token | awk '{print $1}')
-```
+3. Generate the authorization token:
 
-Now create a proxy server that will allow you to navigate to the dashboard from the browser on your local machine. This will continue running until you stop the process:
+    ```bash
+    kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"
+    ```
 
-```bash
-kubectl proxy
-```
+4. Create a proxy server that will allow you to navigate to the dashboard from the browser on your local machine. This will continue running until you stop the process:
 
-You should be able to access and login to the Kubernetes [dashboard](http://127.0.0.1:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/).
+    ```bash
+    kubectl proxy
+    ```
+
+5. You should be able to access and login to the [Kubernetes Dashboard](http://127.0.0.1:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/).
