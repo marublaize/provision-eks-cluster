@@ -52,6 +52,10 @@ kubectl get deployment metrics-server -n kube-system
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.4.0/aio/deploy/recommended.yaml
     ```
 
+    <!-- ```bash
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
+    ``` -->
+
 2. Create a **ClusterRoleBinding** and provide an authorization token. This gives the **cluster-admin** permission to access the kubernetes-dashboard:
 
     ```bash
