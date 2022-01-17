@@ -1,13 +1,13 @@
 variable "region" {
-  default     = "us-east-1"
+  default = "us-east-1"
 }
 
 variable "cluster_name" {
-  default     = "eks-cluster"
+  default = "eks-cluster"
 }
 
 variable "cluster_version" {
-  default     = "1.21"
+  default = "1.21"
 }
 
 variable "root_volume_type" {

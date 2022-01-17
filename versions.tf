@@ -5,7 +5,7 @@ terraform {
     region         = "us-east-1"
     dynamodb_table = "tfstate-locks"
     encrypt        = true
-    }
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -37,7 +37,7 @@ terraform {
 }
 
 provider "aws" {
-  region     = var.region
+  region = var.region
 }
 
 # The Kubernetes provider is included in this file so the EKS module can complete successfully. Otherwise, it throws an error when creating `kubernetes_config_map.aws_auth`.
