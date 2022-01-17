@@ -37,7 +37,7 @@ terraform {
 }
 
 provider "aws" {
-  region     = var.aws_region
+  region     = var.region
 }
 
 # The Kubernetes provider is included in this file so the EKS module can complete successfully. Otherwise, it throws an error when creating `kubernetes_config_map.aws_auth`.
